@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html >
+  <head>
+    <meta charset="UTF-8">
+    <title>Google Map</title>
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/leaflet.css" />
+    <link rel="stylesheet" href="css/MarkerCluster.css" />
+    <link rel="stylesheet" href="css/MarkerCluster.Default.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+  </head>
+
+  <body>
+ 
+  <div class="main" ng-app="myApp" ng-controller="mainCtrl" >
+    <div class="sidebar"  >
+      <div class="sw" ng-class="{geros: focused}" >
+    <form>
+      <button class="gos" ng-class="{gero: focused}"><i style="padding-top: 5px;" class="material-icons">menu</i></button>
+      <input type="search" class="search" ng-init="focused = false" ng-focus="focused = true" ng-blur="focused = false" placeholder="Искать по камерам" />
+      <button class="go"  ng-class="{ger: focused}"><i style="padding-top: 5px;" class="material-icons">search</i></button>
+    </form>
+  </div>
+    <div style="height: 275px; background-color: black;"><iframe width="100%" height="275" ng-src="{{currentProjectUrl}}" frameborder="0" allowfullscreen></iframe></div>
+    <div class="place-header"  >
+    
+    <div ng-click="userLocation()" class="float-action-button"><i class="material-icons md-37">fullscreen</i></div>
+    <div class="fadein" ng-show="visible" >
+    <h1 class="place-title" >{{titleWebcam}}</h1>
+    <p class="place-text">{{descrWebcam}}</p>
+    </div>
+    </div>
+
+    <div class="paneler">
+    <div class="btn-group-justified" >
+      <a href="#" class="btn btn-white" >
+      <i class="material-icons" style="display:block;">star</i>
+        Unfinished
+      </a>
+      <a href="#" class="btn btn-white">
+      <i class="material-icons" style="display:block;">star</i>
+        Done
+      </a>
+      <a href="#" class="btn btn-white">
+      <i class="material-icons" style="display:block;">star</i>
+        All
+      </a>
+    </div>
+    </div>
+
+    <div class="main-descr">
+    <div class="main-descr-title">
+    <h1>Что рядом?</h1>
+    </div>
+    <div class="main-descr-text">
+    <ul id="places" class="mdl-list">
+    </ul>
+    </div>
+    </div> 
+
+    <footer>
+      <center><p> <small>TOP2.BY <br> OOO «ТопТуБай» </small> </p></center>
+    </footer>    
+    </div>
+    <div class="map" >
+
+    <leaflet lf-center="brest" layers="layers" controls="controls" markers="markers" height="100%" width="100%"></leaflet>
+
+    </div>
+  </div>
+
+
+    <script src='http://ajax.googleapis.com/ajax/libs/angularjs/1.3.2/angular.min.js'></script>
+
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.2/angular-animate.js"></script>
+
+    <script src='http://cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js'></script>
+
+    <script src='http://nmccready.github.io/angular-simple-logger/dist/angular-simple-logger.js'></script>
+    
+    <script src='http://maps.googleapis.com/maps/api/js?v=3&key=AIzaSyCs10dAlmjtE8VPAJYqvkep7QTXcNmVzQE&libraries=places'></script>
+
+    
+
+    <script src="http://angular-ui.github.io/ui-leaflet/dist/ui-leaflet.min.js"></script>
+
+    <script src="js/lib/leaflet/leaflet.js"></script>
+
+    <script src="js/lib/leaflet/leaflet.markercluster.js"></script>
+
+    <script src='http://cdnjs.cloudflare.com/ajax/libs/leaflet-plugins/1.6.1/layer/tile/Google.min.js'></script>
+
+        <script src="js/app.js"></script>
+        <script src="js/controllers/mainCtrl.js"></script>
+
+  </body>
+</html>
