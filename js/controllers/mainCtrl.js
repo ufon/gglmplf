@@ -1,6 +1,6 @@
 'use strict';
 
-myApp.controller("mainCtrl",function($scope,$sce,$timeout,Markers,$http,leafletData){
+myApp.controller("mainCtrl", function($scope,$sce,$timeout,Markers,$http,leafletData){
 
 
 
@@ -57,7 +57,7 @@ myApp.controller("mainCtrl",function($scope,$sce,$timeout,Markers,$http,leafletD
 
 
 
-    angular.extend($scope, {
+            angular.extend($scope, {
                 brest: {
                     lat: 52.094,
                     lng: 23.69,
@@ -90,6 +90,52 @@ myApp.controller("mainCtrl",function($scope,$sce,$timeout,Markers,$http,leafletD
                 }
             });
 
+
+        $scope.$on('leafletDirectiveMap.load', function(e) {
+
+             leafletData.getMap().then(
+                function (map) {
+
+                    var customControl =  L.Control.extend({
+
+                      options: {
+                        position: 'bottomright'
+                      },
+
+                      onAdd: function (map) {
+                        var container = L.DomUtil.create('div', 'leaflet-bar leaflet-control leaflet-control-custom cursor');
+                    
+
+                        container.innerHTML = '<i style="font-size:28pt;     margin: 9px; " class="material-icons">location_searching</i>';
+                        container.style.backgroundColor = 'white';     
+                        //container.style.backgroundImage = "url(http://t1.gstatic.com/images?q=tbn:ANd9GcR6FCUMW5bPn8C4PbKak2BJQQsmC-K9-mbYBeFZm1ZM2w2GRy40Ew)";
+                        container.style.backgroundSize = "56px 56px";
+                        container.style.width = '56px';
+                        container.style.height = '56px';
+                        
+                        container.onmouseover = function(){
+                          container.style.backgroundColor = '#f4f4f4'; 
+                        }
+                        container.onmouseout = function(){
+                          container.style.backgroundColor = 'white'; 
+                        }
+
+                        container.onclick = function(){
+                            $scope.userLocation();
+                        }
+
+                        return container;
+                      }
+                    });
+
+                    map.addControl(new customControl());
+                }
+            );
+
+
+        });
+
+
         $scope.$on('leafletDirectiveMarker.click', function(e, args) {
 
             // Args will contain the marker name and other relevant information
@@ -113,26 +159,11 @@ myApp.controller("mainCtrl",function($scope,$sce,$timeout,Markers,$http,leafletD
 
         $scope.userLocation = function() {
 
-
-            var MyControl = new L.control();
-            MyControl.setPosition('bottomleft');
-            MyControl.onAdd = function () {
-            var className = 'leaflet-custom-control', 
-            container = L.DomUtil.create('div', className + ' leaflet-bar');
-            //angular.element(container).append(' Something' ); to see it
-
-            // L.DomEvent.addListener(container, 'click', function(e){alert('My button first Click')});
-            // Search a lot for this click also.
-            return container;
-            }
-
-            $scope.controls['custom'] = MyControl;
-
-
-
             var url = "https://www.googleapis.com/geolocation/v1/geolocate?key=" + key;
+
             $http.post(url)
                 .then(function(result) { 
+
                     $scope.brest.lat = result.data.location.lat;
                     $scope.brest.lng = result.data.location.lng;
 
@@ -146,12 +177,7 @@ myApp.controller("mainCtrl",function($scope,$sce,$timeout,Markers,$http,leafletD
 
 
                 });
+
         }
-
-
-
-
-
-  
 
 });
