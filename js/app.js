@@ -1,4 +1,4 @@
-var myApp = angular.module('myApp', ['ui-leaflet', 'ngAnimate']);
+var myApp = angular.module('myApp', ['ui-leaflet', 'ngAnimate', 'asideModule']);
 
 myApp.factory("Markers", function(){
   var Markers = [

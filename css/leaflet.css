@@ -58,9 +58,9 @@
   -moz-user-select: none;
 }
 
-.leaflet-tile-pane    { z-index: 2; }
+.leaflet-tile-pane    { z-index: 3; }
 .leaflet-objects-pane { z-index: 3; }
-.leaflet-overlay-pane { z-index: 4; }
+.leaflet-overlay-pane { z-index: 4; display: none; }
 .leaflet-shadow-pane  { z-index: 5; }
 .leaflet-marker-pane  { z-index: 6; }
 .leaflet-popup-pane   { z-index: 7; }
@@ -86,8 +86,7 @@
 .leaflet-top,
 .leaflet-bottom {
   position: absolute;
-  z-index: 1000;
-  pointer-events: none;
+  z-index: 888;
 }
 .leaflet-top {
   top: 0;

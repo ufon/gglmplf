@@ -2,8 +2,17 @@
 
 myApp.controller("mainCtrl", function($scope,$sce,$timeout,Markers,$http,leafletData){
 
+    $scope.checked = false;
 
+    $scope.size = '100px';
 
+    $scope.visible = true;
+
+    $scope.toggle = function() {
+
+                    $scope.checked = !$scope.checked
+
+    }
 
     $scope.currentProjectUrl = $sce.trustAsResourceUrl('https://www.youtube.com/embed/UVismUIJi4A');
 
@@ -31,26 +40,27 @@ myApp.controller("mainCtrl", function($scope,$sce,$timeout,Markers,$http,leaflet
                         title: "Vitacci",
                         descr: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
                         src: "http://lideo.ru/embed/2237",
-                        icon: leaf_icon
+                        icon: {
+                        type: 'awesomeMarker',
+                        icon: 'video-camera',
+                        prefix: 'fa',
+                        markerColor: '#3F51B5'
+                        }
                     },
                     m2: {
                         group: "ipcams",
                         lat: 52.090974,
                         lng: 23.694484,
+                        message: 'Кинотеатр Беларусь г. Брест',
                         title: "Кинотеатр Беларусь г. Брест",
                         descr: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
                         src: "http://lideo.ru/embed/2298",
-                        icon: leaf_icon
-
-                    },
-                    m3: {
-                        group: "ipcams",
-                        lat: 52.090974,
-                        lng: 23.694484,
-                        title: "Кинотеатр Беларусь г. Брест",
-                        descr: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-                        src: "http://lideo.ru/embed/2298",
-                        icon: leaf_icon
+                        icon: {
+                        type: 'awesomeMarker',
+                        icon: 'video-camera',
+                        prefix: 'fa',
+                        markerColor: '#3F51B5'
+                        }
 
                     }
                 };
@@ -96,6 +106,7 @@ myApp.controller("mainCtrl", function($scope,$sce,$timeout,Markers,$http,leaflet
              leafletData.getMap().then(
                 function (map) {
 
+
                     var customControl =  L.Control.extend({
 
                       options: {
@@ -139,6 +150,9 @@ myApp.controller("mainCtrl", function($scope,$sce,$timeout,Markers,$http,leaflet
         $scope.$on('leafletDirectiveMarker.click', function(e, args) {
 
             // Args will contain the marker name and other relevant information
+            if ($scope.titleWebcam == args.model.title) {
+                return;
+            }
 
             $scope.currentProjectUrl = $sce.trustAsResourceUrl(args.model.src);
 
@@ -166,13 +180,21 @@ myApp.controller("mainCtrl", function($scope,$sce,$timeout,Markers,$http,leaflet
 
                     $scope.brest.lat = result.data.location.lat;
                     $scope.brest.lng = result.data.location.lng;
+                    $scope.brest.zoom = 20;
+
 
                     $scope.markers['location']={
                     lat: $scope.brest.lat, 
                     lng: $scope.brest.lng,
                     focus: true,
                     message: 'Ваше примерное местоположение',
-                    group: "ipcams" 
+                    group: "ipcams",
+                    icon: {
+                        type: 'awesomeMarker',
+                        icon: 'globe',
+                        prefix: 'fa',
+                        markerColor: '#D32F2F'
+                        }
                     };
 
 
