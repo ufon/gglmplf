@@ -3,35 +3,70 @@
   <head>
     <meta charset="UTF-8">
     <title>Google Map</title>
+    \<link rel="stylesheet" href="https://code.getmdl.io/1.1.3/material.indigo-pink.min.css">
     <link rel="stylesheet" href="css/normalize.css">
-    <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/aside-menu.css">
     <link rel="stylesheet" href="css/leaflet.css" />
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/component.css">
+    <link rel="stylesheet" href="css/simplebar.css">
     <link rel="stylesheet" href="css/leaflet.awesome-markers.css" />
     <link rel="stylesheet" href="css/MarkerCluster.css" />
     <link rel="stylesheet" href="css/MarkerCluster.Default.css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"/>
-    
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <script defer src="https://code.getmdl.io/1.1.3/material.min.js"></script>
   </head>
 
   <body>
 
-    	<aside-menu id="sol2" side="left" width="320px" is-backdrop="true" push-content="false">
-	    <ul class="list-group">
-	        <li class="list-group-item">Cras justo odio</li>
-	        <li class="list-group-item">Dapibus ac facilisis in</li>
-	        <li class="list-group-item">Morbi leo risus</li>
-	        <li class="list-group-item">Porta ac consectetur ac</li>
-	        <li class="list-group-item">Vestibulum at eros</li>
-	    </ul>
+
+
+  <div style="height: 0; width: 0; position: absolute; visibility: hidden;" aria-hidden="true">
+    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" focusable="false">
+      <symbol id="ripply-scott" viewBox="0 0 100 100">
+        <circle id="ripple-shape" cx="1" cy="1" r="1" />
+      </symbol>
+    </svg>
+  </div>
+
+    <aside-menu id="sol2" side="left" width="320px" is-backdrop="true" push-content="false">
+      <div class="menu-header" style="padding: 6px 22px;">
+      <div>
+      <img src="/img/logo.png" style="display: block;height: 100px;padding: 5px 0 3px;">
+      </div>
+      </div>
+	    <ul role="menu" class="main-menu">
+
+       <li><button class="mdl-button mdl-js-button mdl-js-ripple-effect">
+        <i  class="material-icons">search</i><span class="text">Справка</span></button></li>
+       <li><button class="mdl-button mdl-js-button mdl-js-ripple-effect">
+        <i  class="material-icons">search</i><span class="text">Добавить компанию</span></button></li>
+       <li><button class="mdl-button mdl-js-button mdl-js-ripple-effect">
+        <i  class="material-icons">search</i><span class="text">Оставить отзыв</span></button></li>
+      </ul>
 		</aside-menu>
 <aside-menu-content>
-  <div class="main"  ng-controller="mainCtrl" >
+  <div class="main"  ng-controller="mainCtrl">
+
+            <div class="md-modal md-effect-1" id="modal-1">
+      <div class="md-content">
+        <h3>Поделиться</h3>
+        <div>
+            <div class="mdl-textfield mdl-js-textfield" style="width:100%">
+              <input class="mdl-textfield__input" type="text" value="{{currentUrl}}" id="sample1" readonly>
+              <label class="mdl-textfield__label" for="sample1"></label>
+            </div>
+          <button class="mdl-button mdl-js-button mdl-button--raised md-close">
+          Закрыть
+          </button>
+        </div>
+      </div>
+    </div>
 
 
-
-    <div class="sidebar" >
+    <div class="sidebar" data-simplebar-direction="vertical" >
     <div class="wrap">
     <div class="sw" ng-class="{geros: focused}" >
     <form>
@@ -40,25 +75,43 @@
       <button class="go"  ng-class="{ger: focused}"><i style="padding-top: 5px;" class="material-icons">search</i></button>
     </form>
   </div>
-    <div style="height: 275px; background-color: black;"><iframe width="100%" height="275" ng-src="{{currentProjectUrl}}" frameborder="0" allowfullscreen></iframe></div>
+    <div style="height: 250px; background-color: black;"><iframe width="100%" height="250" ng-src="{{currentProjectUrl}}" frameborder="0" allowfullscreen></iframe></div>
     <div class="place-header"  >
     
-    <div ng-click="userLocation()" class="float-action-button"><i class="material-icons md-37">fullscreen</i></div>
+    <div ng-click="redirectToNew(currentProjectUrl)" class="float-action-button"><i class="material-icons md-37">fullscreen</i></div>
     <div class="fadein" ng-show="visible" >
     <h1 class="place-title" >{{titleWebcam}}</h1>
     <p class="place-text">{{descrWebcam}}</p>
+    <div ng-view></div>
     </div>
     </div>
 
     <div class="paneler">
-    <button class="button"><i class="material-icons" style="display:block;">star</i>Button</button>
-	<button class="button"><i class="material-icons" style="display:block;">star</i>Button</button>
-	<button class="button"><i class="material-icons" style="display:block;">star</i>Button</button>
-	<button class="button"><i class="material-icons" style="display:block;">star</i>Button</button>
+    <button class="button" id="js-ripple-btn1"><i class="material-icons" style="display:block;    padding-bottom: 7px;" >home</i><p>О проекте</p>
+      <svg class="ripple-obj" id="js-ripple">
+          <use height="100" width="100" xlink:href="#ripply-scott" id="js-ripple1" class="js-ripple"></use>
+        </svg>
+
+    </button>
+	<button class="button" id="js-ripple-btn2"><i class="material-icons" style="display:block;padding-bottom: 7px;">star</i><p>Добавить в избранное</p>
+      <svg class="ripple-obj" id="js-ripple">
+          <use height="100" width="100" xlink:href="#ripply-scott" id="js-ripple2" class="js-ripple"></use>
+        </svg>
+  </button>
+	<button class="button" id="js-ripple-btn3"><i class="material-icons" style="display:block;    padding-bottom: 7px;" >person_add</i><p>Принять участие</p>
+      <svg class="ripple-obj" id="js-ripple">
+          <use height="100" width="100" xlink:href="#ripply-scott" id="js-ripple3" class="js-ripple"></use>
+        </svg>
+  </button>
+	<button class="button md-trigger" data-modal="modal-1" id="js-ripple-btn4"><i class="material-icons"  style="display:block;    padding-bottom: 7px;" >share</i><p>Поделиться</p>
+      <svg class="ripple-obj" id="js-ripple">
+          <use height="100" width="100" xlink:href="#ripply-scott" id="js-ripple4" class="js-ripple"></use>
+        </svg>
+  </button>
 	</div>
     <div class="main-descr">
     <div class="main-descr-title">
-    <h1>Что рядом?</h1>
+    <h1>Камеры рядом</h1>
     </div>
     <div class="main-descr-text">
     <ul id="places" class="mdl-list">
@@ -67,22 +120,26 @@
     </div> 
     </div>
     <footer>
-      <center><p> <small>TOP2.BY <br> OOO «ТопТуБай» </small> </p></center>
+      <center><p> <small> voblako.by <br> OOO «ТопТуБай» </small> </p></center>
     </footer>    
     </div>
     <div class="map" >
 
-    <leaflet defaults="defaults"  lf-center="brest" layers="layers" controls="controls" markers="markers" height="100%" width="100%"></leaflet>
+    <leaflet defaults="defaults"  lf-center="map" layers="layers" controls="controls" markers="markers" height="100%" width="100%"></leaflet>
 
     </div>
   </div>
-
+<div class="md-overlay"></div>
 <div id="backdrop"></div>
 </aside-menu-content>
+
+    <script src="https://code.jquery.com/jquery-3.0.0.min.js" integrity="sha256-JmvOoLtYsmqlsWxa7mDSLMwa6dZ9rrIdtrrVYRnDRH0=" crossorigin="anonymous"></script>
 
     <script src='http://ajax.googleapis.com/ajax/libs/angularjs/1.3.2/angular.min.js'></script>
 
     <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.2/angular-animate.js"></script>
+
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.2/angular-route.js"></script>
 
     <script src='http://cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js'></script>
 
@@ -94,9 +151,19 @@
 
     <script src="js/lib/leaflet/leaflet.js"></script>
 
+    <script src="js/lib/simplebar.min.js"></script>
+
     <script src="js/lib/leaflet/leaflet.awesome-markers.js"></script>
 
     <script src="js/lib/aside-menu.js"></script>
+
+    <script src="js/lib/classie.js"></script>
+
+    <script src="js/lib/modalEffects.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.17.0/TweenMax.min.js"></script>
+
+    <script src="js/lib/ripple-config.js"></script>
 
     <script src="js/lib/leaflet/leaflet.markercluster.js"></script>
 

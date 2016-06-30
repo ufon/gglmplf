@@ -1,79 +1,54 @@
 'use strict';
 
-myApp.controller("mainCtrl", function($scope,$sce,$timeout,Markers,$http,leafletData){
+myApp.controller("mainCtrl", 
+    function(
+    $scope,
+    $sce,
+    $timeout,
+    Markers,
+    $http,
+    leafletData,
+    $window,
+    $location,
+    $routeParams,
+    $rootScope,
+    $filter
+    ){
 
-    $scope.checked = false;
+        $scope.markers = Markers;
 
-    $scope.size = '100px';
+        $scope.currentUrl = $location.absUrl();
 
-    $scope.visible = true;
+        $scope.selectedPlace = function(selected) {
+          if (selected) {
+            window.alert('You have selected ' + selected.title);
+          } else {
+            console.log('cleared');
+          }
+        };
 
-    $scope.toggle = function() {
+        var key = 'AIzaSyCs10dAlmjtE8VPAJYqvkep7QTXcNmVzQE';
 
-                    $scope.checked = !$scope.checked
+        var leaf_icon = {
+                    iconUrl: 'img/pin.png',
+                    shadowUrl: 'css/assets/1.png',
+                    iconSize:     [25, 37], // size of the icon
+                    shadowSize:   [45, 45], // size of the shadow
+                    iconAnchor:   [25, 37], // point of the icon which will correspond to marker's location
+                    shadowAnchor: [26, 45],  // the same for the shadow
+                    popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+        };
 
-    }
-
-    $scope.currentProjectUrl = $sce.trustAsResourceUrl('https://www.youtube.com/embed/UVismUIJi4A');
-
-    $scope.titleWebcam = 'Test';
-
-    $scope.descrWebcam = 'testdescr';
-
-    var key = 'AIzaSyCs10dAlmjtE8VPAJYqvkep7QTXcNmVzQE';
-
-    var leaf_icon = {
-                iconUrl: 'img/pin.png',
-                shadowUrl: 'css/assets/1.png',
-                iconSize:     [25, 37], // size of the icon
-                shadowSize:   [45, 45], // size of the shadow
-                iconAnchor:   [25, 37], // point of the icon which will correspond to marker's location
-                shadowAnchor: [26, 45],  // the same for the shadow
-                popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
-    };
-
-    $scope.markers = {
-                    m1: {
-                        group: "ipcams",
-                        lat: 52.089971,
-                        lng: 23.694642,
-                        title: "Vitacci",
-                        descr: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-                        src: "http://lideo.ru/embed/2237",
-                        icon: {
-                        type: 'awesomeMarker',
-                        icon: 'video-camera',
-                        prefix: 'fa',
-                        markerColor: '#3F51B5'
-                        }
-                    },
-                    m2: {
-                        group: "ipcams",
-                        lat: 52.090974,
-                        lng: 23.694484,
-                        message: 'Кинотеатр Беларусь г. Брест',
-                        title: "Кинотеатр Беларусь г. Брест",
-                        descr: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-                        src: "http://lideo.ru/embed/2298",
-                        icon: {
-                        type: 'awesomeMarker',
-                        icon: 'video-camera',
-                        prefix: 'fa',
-                        markerColor: '#3F51B5'
-                        }
-
-                    }
-                };
+    
 
 
-
-            angular.extend($scope, {
-                brest: {
+            $rootScope.map = {
                     lat: 52.094,
                     lng: 23.69,
                     zoom: 12
-                },
-                layers: {
+            },
+
+            $scope.layers = {
                     baselayers: {
                         googleRoadmap: {
                             name: 'Google Streets',
@@ -97,9 +72,17 @@ myApp.controller("mainCtrl", function($scope,$sce,$timeout,Markers,$http,leaflet
                         }
                     },
                     controls: {}
-                }
-            });
+            }
 
+
+
+    $scope.visible = true;
+
+    $rootScope.currentProjectUrl = $sce.trustAsResourceUrl('https://www.youtube.com/embed/UVismUIJi4A');
+
+    $rootScope.titleWebcam = 'Test';
+
+    $rootScope.descrWebcam = 'testdescr';
 
         $scope.$on('leafletDirectiveMap.load', function(e) {
 
@@ -154,6 +137,8 @@ myApp.controller("mainCtrl", function($scope,$sce,$timeout,Markers,$http,leaflet
                 return;
             }
 
+            console.log(args);
+
             $scope.currentProjectUrl = $sce.trustAsResourceUrl(args.model.src);
 
             $scope.visible = false;
@@ -168,7 +153,17 @@ myApp.controller("mainCtrl", function($scope,$sce,$timeout,Markers,$http,leaflet
 
             }, 400);
 
+            $location.path('/place/'+args.modelName );
+
+            $scope.currentUrl = $location.absUrl();
+
+            
+
         });
+
+        $scope.redirectToNew = function(url){
+            $window.open(url, '_blank');
+        };
 
 
         $scope.userLocation = function() {
@@ -178,14 +173,15 @@ myApp.controller("mainCtrl", function($scope,$sce,$timeout,Markers,$http,leaflet
             $http.post(url)
                 .then(function(result) { 
 
-                    $scope.brest.lat = result.data.location.lat;
-                    $scope.brest.lng = result.data.location.lng;
-                    $scope.brest.zoom = 20;
+                    $scope.map.lat = result.data.location.lat;
+                    $scope.map.lng = result.data.location.lng;
+                    $scope.map.zoom = 20;
 
+                    $scope.nearPlaces(result.data.location.lat, result.data.location.lng);
 
-                    $scope.markers['location']={
-                    lat: $scope.brest.lat, 
-                    lng: $scope.brest.lng,
+                    $scope.markers.push({
+                    lat: $scope.map.lat, 
+                    lng: $scope.map.lng,
                     focus: true,
                     message: 'Ваше примерное местоположение',
                     group: "ipcams",
@@ -194,12 +190,58 @@ myApp.controller("mainCtrl", function($scope,$sce,$timeout,Markers,$http,leaflet
                         icon: 'globe',
                         prefix: 'fa',
                         markerColor: '#D32F2F'
-                        }
-                    };
+                    }
+                    });
 
 
                 });
 
         }
+
+        $scope.nearPlaces = function(lat, lng){
+
+            function distanceCof(lat, lng, val, key){
+
+
+                var x = lat - lng; // наше место 
+                var y = val.lat - val.lng; // место камеры
+
+
+                var cof = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));//расстояние по пифагора
+
+                return cof;
+
+            }
+
+            var places = [];
+
+                angular.forEach($scope.markers, function (val, key) {
+
+                    console.log(val);
+
+                    var form = {
+                        id: key,
+                        distanceCof: distanceCof(lat, lng, val, key),
+                        lat: lat,
+                        lng: lng,
+                        title: val.title
+                    };
+
+                    this.push(form); // much wow
+
+                }, places);
+
+            places = $filter('orderBy')(places, 'distanceCof');
+
+            var placesList = angular.element( document.querySelector( '#places' ) );
+
+            angular.forEach(places, function(value, key) {
+            placesList.append('<li class="mdl-list__item mdl-js-ripple-effect"><span class="mdl-list__item-primary-content"><i class="material-icons mdl-list__item-icon">videocam</i>'+value.title+'</span><a class="mdl-list__item-secondary-action" href="#"><i class="material-icons">star</i></a></li>');     
+            });
+            
+            console.log($scope.sortPlaces);
+
+        }
+
 
 });

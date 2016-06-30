@@ -8,27 +8,56 @@ html, body {
   padding: 0;
 }
 
+.leaflet-popup{
+    padding-bottom:10px;
+}
+
+.leaflet-popup-content-wrapper { border-radius: 0px;}
+
+.leaflet-popup-content-wrapper {
+  font-family: 'Roboto', sans-serif;
+  color:#eee;
+  font-size:16px;
+  line-height:24px;
+  }
+  
+.leaflet-popup-content-wrapper {
+  background: #2a3035;
+}
+
+.leaflet-popup-tip {
+  background: #2a3035;	
+}
 
 .cursor{
   cursor: pointer!important;
 }
 
 .button {
-    background-color: #4CAF50; /* Green */
+
+    background-color: white;
     border: none;
-    color: white;
-    padding: 15px 32px;
+    color: #4285F4;
     text-align: center;
     text-decoration: none;
+    position: relative;
     display: inline-block;
-    font-size: 16px;
+    font-size: 13px;
+    font-weight: 500;
+    text-transform: uppercase;
     cursor: pointer;
     width: 25%;
     float: left;
+  -webkit-transition: 200ms background cubic-bezier(0.4, 0, 0.2, 1);
+  transition: 200ms background cubic-bezier(0.4, 0, 0.2, 1);
+    -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border: none;
 }
 
 .button:hover {
-    background-color: #3e8e41;
+
 }
 
 p {
@@ -62,6 +91,7 @@ p {
   transition: all 0.05s ease-in-out;
 }
 .sw form {
+
   box-shadow: 0 2px 4px rgba(0,0,0,0.2),0 -1px 0px rgba(0,0,0,0.02);
   float: left;
   width: 100%;
@@ -323,8 +353,21 @@ padding: 20px;
 .paneler{
 min-height: 60px; 
 border-bottom: 1px solid #E6E6E6;
-padding: 8px 20px;
+padding: 18px 20px;
     display: flex;
+}
+
+.paneler p {
+     min-height: 30px;
+         line-height: 15px;
+
+    font-weight: 500;
+}
+
+button, 
+button:active, 
+button:focus {
+    outline: none;
 }
 
 
@@ -455,4 +498,40 @@ color: white;
 
 .fadein.ng-hide {
   opacity: 0;
+}
+
+.main-menu{
+    border-top: 1px solid #d9d9d9;
+    color: #777;
+    font-size: 13px;
+    padding: 0px 0px;
+    list-style: none;
+}
+
+.main-menu li {
+
+
+}
+
+.main-menu > li > button {
+
+    width: 100%;
+    text-align: left;
+    height: 50px;
+
+}
+
+.main-menu > li >  button > i {
+
+    margin-left: 10px;
+
+}
+
+.main-menu > li >  button > .text {
+
+    color: #777;
+    font-size: 13px;
+    text-transform: none;
+    margin-left: 20px;
+
 }
