@@ -59,6 +59,23 @@ myApp.factory("Markers", function(){
                         markerColor: '#3F51B5'
                         }
 
+                    },
+                    {
+                        id: 2,
+                        group: "ipcams",
+                        lat: 52.098366,
+                        lng: 23.731059,
+                        message: '111',
+                        title: "111",
+                        descr: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+                        src: "http://lideo.ru/embed/2298",
+                        icon: {
+                        type: 'awesomeMarker',
+                        icon: 'video-camera',
+                        prefix: 'fa',
+                        markerColor: '#3F51B5'
+                        }
+
                     }
   ]
   return Markers;

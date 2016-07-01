@@ -74,7 +74,9 @@ myApp.controller("mainCtrl",
                     controls: {}
             }
 
+    $scope.markerLocation = false;
 
+    $scope.lengthMarkers = $scope.markers.length;        
 
     $scope.visible = true;
 
@@ -153,11 +155,11 @@ myApp.controller("mainCtrl",
 
             }, 400);
 
+            $scope.nearPlaces(args.model.lat, args.model.lng, args.model.id, false);
+
             $location.path('/place/'+args.modelName );
 
             $scope.currentUrl = $location.absUrl();
-
-            
 
         });
 
@@ -177,11 +179,12 @@ myApp.controller("mainCtrl",
                     $scope.map.lng = result.data.location.lng;
                     $scope.map.zoom = 20;
 
-                    $scope.nearPlaces(result.data.location.lat, result.data.location.lng);
-
-                    $scope.markers.push({
+                    $scope.markers[$scope.lengthMarkers+1]={
                     lat: $scope.map.lat, 
                     lng: $scope.map.lng,
+                    id: $scope.lengthMarkers+1,
+                    title: 'Ваше примерное местоположение',
+                    descr: '',
                     focus: true,
                     message: 'Ваше примерное местоположение',
                     group: "ipcams",
@@ -191,26 +194,49 @@ myApp.controller("mainCtrl",
                         prefix: 'fa',
                         markerColor: '#D32F2F'
                     }
-                    });
+                    };
+
+                    $scope.markerLocation = true;
+
+                    $scope.nearPlaces(result.data.location.lat, result.data.location.lng, $scope.markers.length+1);
 
 
                 });
 
         }
 
-        $scope.nearPlaces = function(lat, lng){
+        $scope.nearPlaces = function(lat, lng, id, locationMarker){
+
+            var placesList = angular.element( document.querySelector( '#places' ) );
+
+            placesList.empty();
 
             function distanceCof(lat, lng, val, key){
 
+                // перевести координаты в радианы
+                var lat1 = lat * Math.PI / 180;
+                var lat2 = val.lat * Math.PI / 180;
+                var long1 = lng * Math.PI / 180;
+                var long2 = val.lng * Math.PI / 180;
 
-                var x = lat - lng; // наше место 
-                var y = val.lat - val.lng; // место камеры
+                // косинусы и синусы широт и разницы долгот
+                var cl1 = Math.cos(lat1);
+                var cl2 = Math.cos(lat2);
+                var sl1 = Math.sin(lat1);
+                var sl2 = Math.sin(lat2);
+                var delta = long2 - long1;
+                var cdelta = Math.cos(delta);
+                var sdelta = Math.sin(delta);
 
+                // вычисления длины большого круга
+                var y = Math.sqrt(Math.pow(cl2 * sdelta, 2) + Math.pow(cl1 * sl2 - sl1 * cl2 * cdelta, 2));
+                var x = sl1 * sl2 + cl1 * cl2 * cdelta;
 
-                var cof = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));//расстояние по пифагора
+                //
+                var ad = Math.atan2(y, x);
+                var dist = ad * 6372795;
 
-                return cof;
-
+                return dist/1000;
             }
 
             var places = [];
@@ -231,17 +257,33 @@ myApp.controller("mainCtrl",
 
                 }, places);
 
+            places.splice(id, 1);
+
+            if ($scope.markerLocation) { places.splice(-1, 1); }
+
             places = $filter('orderBy')(places, 'distanceCof');
 
-            var placesList = angular.element( document.querySelector( '#places' ) );
-
             angular.forEach(places, function(value, key) {
-            placesList.append('<li class="mdl-list__item mdl-js-ripple-effect"><span class="mdl-list__item-primary-content"><i class="material-icons mdl-list__item-icon">videocam</i>'+value.title+'</span><a class="mdl-list__item-secondary-action" href="#"><i class="material-icons">star</i></a></li>');     
+            placesList.append('<li class="mdl-list__item "><span class="mdl-list__item-primary-content"><i class="material-icons mdl-list__item-icon">videocam</i>'+value.title+'</span><button ng-click="goTo('+value.id+')" style="min-width:36px;width: 36px;height:36px;" class="mdl-button mdl-js-button mdl-button--fab"><i class="material-icons">add</i></button></li>');     
             });
             
-            console.log($scope.sortPlaces);
+            console.log(id);
 
         }
+
+
+         /**
+           * Center map on specific saved location
+           * @param lat, lng
+           */
+        $scope.goTo = function(id) {
+
+            $scope.map.lat  = lat;
+            $scope.map.lng  = lng;
+            $scope.map.zoom  = 20;
+
+        };
+
 
 
 });
