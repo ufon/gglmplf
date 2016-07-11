@@ -12,7 +12,8 @@ myApp.controller("mainCtrl",
     $location,
     $routeParams,
     $rootScope,
-    $filter
+    $filter,
+    $compile
     ){
 
         $scope.markers = Markers;
@@ -50,6 +51,11 @@ myApp.controller("mainCtrl",
 
             $scope.layers = {
                     baselayers: {
+                        osm: {
+                            name: 'OpenStreetMap',
+                            url: 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                            type: 'xyz'
+                        },
                         googleRoadmap: {
                             name: 'Google Streets',
                             layerType: 'ROADMAP',
@@ -134,6 +140,8 @@ myApp.controller("mainCtrl",
 
         $scope.$on('leafletDirectiveMarker.click', function(e, args) {
 
+            
+
             // Args will contain the marker name and other relevant information
             if ($scope.titleWebcam == args.model.title) {
                 return;
@@ -155,7 +163,7 @@ myApp.controller("mainCtrl",
 
             }, 400);
 
-            $scope.nearPlaces(args.model.lat, args.model.lng, args.model.id, false);
+            $scope.nearPlaces(args.model.lat, args.model.lng, args.model.id);
 
             $location.path('/place/'+args.modelName );
 
@@ -205,7 +213,7 @@ myApp.controller("mainCtrl",
 
         }
 
-        $scope.nearPlaces = function(lat, lng, id, locationMarker){
+        $rootScope.nearPlaces = function(lat, lng, id){
 
             var placesList = angular.element( document.querySelector( '#places' ) );
 
@@ -264,7 +272,8 @@ myApp.controller("mainCtrl",
             places = $filter('orderBy')(places, 'distanceCof');
 
             angular.forEach(places, function(value, key) {
-            placesList.append('<li class="mdl-list__item "><span class="mdl-list__item-primary-content"><i class="material-icons mdl-list__item-icon">videocam</i>'+value.title+'</span><button ng-click="goTo('+value.id+')" style="min-width:36px;width: 36px;height:36px;" class="mdl-button mdl-js-button mdl-button--fab"><i class="material-icons">add</i></button></li>');     
+            var html='<li class="mdl-list__item "><span class="mdl-list__item-primary-content"><i class="material-icons mdl-list__item-icon">videocam</i>'+value.title+'</span><button ng-click="goTo('+value.id+')" style="min-width:36px;width: 36px;height:36px;" class="mdl-button mdl-js-button mdl-button--fab"><i class="material-icons" style="font-size:20px;">send</i></button></li>';
+            placesList.append($compile(html)($scope));
             });
             
             console.log(id);
@@ -278,9 +287,25 @@ myApp.controller("mainCtrl",
            */
         $scope.goTo = function(id) {
 
-            $scope.map.lat  = lat;
-            $scope.map.lng  = lng;
-            $scope.map.zoom  = 20;
+            $scope.currentProjectUrl = $sce.trustAsResourceUrl($scope.markers[id].src);
+
+            $scope.markers[id].focus = true;
+
+            $scope.titleWebcam = $scope.markers[id].title;
+
+            $scope.descrWebcam = $scope.markers[id].descr;
+
+            $scope.map.lat = $scope.markers[id].lat;
+
+            $scope.map.lng = $scope.markers[id].lng;
+
+            $scope.map.zoom = 20;
+
+            $location.path('/place/'+id );
+
+            $scope.currentUrl = $location.absUrl();
+
+            $scope.nearPlaces($scope.markers[id].lat, $scope.markers[id].lng, $scope.markers[id].id, $scope.markers.length+1);
 
         };
 
